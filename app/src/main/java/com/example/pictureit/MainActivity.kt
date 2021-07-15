@@ -49,6 +49,10 @@ class MainActivity : AppCompatActivity() {
             val imageUri = data?.data
             imageUri?.let {
                 val imageStream = contentResolver.openInputStream(imageUri)
+
+                /**
+                 * Content resolvers allow us to access the content providers of other applications.
+                 */
                 val selectedImage = BitmapFactory.decodeStream(imageStream)
                 binding.galleryImage.setImageBitmap(selectedImage)
             }
