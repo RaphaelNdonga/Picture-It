@@ -17,10 +17,13 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
 
         val getGalleryPicture =
-            registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
-                val imageStream = contentResolver.openInputStream(uri)
-                val selectedImage = BitmapFactory.decodeStream(imageStream)
-                binding.galleryImage.setImageBitmap(selectedImage)
+            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+                val imageUri = result.data?.data
+                imageUri?.let {
+                    val imageStream = contentResolver.openInputStream(it)
+                    val selectedImage = BitmapFactory.decodeStream(imageStream)
+                    binding.galleryImage.setImageBitmap(selectedImage)
+                }
             }
 
         val getCameraPicture =
@@ -36,7 +39,9 @@ class MainActivity : AppCompatActivity() {
             getCameraPicture.launch(intent)
         }
         binding.galleryButton.setOnClickListener {
-            getGalleryPicture.launch("image/*")
+            val intent = Intent(Intent.ACTION_GET_CONTENT)
+            intent.type = "image/*"
+            getGalleryPicture.launch(intent)
         }
         setContentView(binding.root)
     }
